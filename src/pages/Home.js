@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import Box from "@mui/material/Box";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { TreeView } from "@mui/x-tree-view/TreeView";
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { tableData } from "./tableData";
 import "./Home.css";
 import { Modal } from "@mui/material";
@@ -17,6 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Button, buttonClasses } from '@mui/base/Button';
 import { styled } from '@mui/system';
+import CountryTreeItem from "../components/CountryTreeItem";
 
 
 
@@ -27,14 +27,11 @@ const Home = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    useEffect(() => {
+    const slicedTableData = useMemo(() => {
         const startIndex = page * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
-        const slicedData = filteredTableData.slice(startIndex, endIndex);
-        setSlicedTableData(slicedData);
+        return filteredTableData.slice(startIndex, endIndex);
     }, [page, rowsPerPage, filteredTableData]);
-
-    const [slicedTableData, setSlicedTableData] = useState([]);
 
     const style = {
         position: 'absolute',
@@ -135,25 +132,6 @@ const Home = () => {
         },
     ];
 
-    const renderTree = (nodes) => (
-        <TreeItem
-            key={nodes.id}
-            nodeId={nodes.id}
-            label={nodes.name}
-            onClick={() => handleNodeSelect(nodes.name)}
-            sx={{
-                fontSize: "1.5rem",
-                "& .MuiTreeItem-label": {
-                    fontSize: "1.5rem",
-                },
-            }}
-        >
-            {Array.isArray(nodes.children)
-                ? nodes.children.map((child) => renderTree(child))
-                : null}
-        </TreeItem>
-    );
-
     const handleViewButtonClick = (rowData) => {
         setSelectedRowData(rowData);
         setIsModalOpen(true);
@@ -176,10 +154,6 @@ const Home = () => {
         }
     };
 
-    // const handlePageChange = ({ selected }) => {
-    //     setCurrentPage(selected);
-    // };
-
     const handlePageChange = (event, newPage) => {
         setPage(newPage);
     };
@@ -194,20 +168,7 @@ const Home = () => {
     };
 
     const homeStyle = {
-        display: 'flex', // Use flex display
-    };
-    const customModalStyles = {
-        content: {
-            width: "500px",
-            height: "300px",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-            padding: "20px",
-        },
+        display: 'flex', 
     };
 
     return (
@@ -232,8 +193,8 @@ const Home = () => {
                         defaultExpanded={["1"]}
                         defaultExpandIcon={<ChevronRightIcon />}
                     >
-                        {renderTree(data[0])}
-                        {renderTree(data[1])}
+                        <CountryTreeItem data={data[0]} handleNodeSelect={handleNodeSelect}/>
+                        <CountryTreeItem data={data[1]} handleNodeSelect={handleNodeSelect}/>
                     </TreeView>
                 </Box>
             </div>
