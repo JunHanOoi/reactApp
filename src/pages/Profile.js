@@ -1,6 +1,7 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 
 
 export default function Profile() {
@@ -9,8 +10,10 @@ export default function Profile() {
         handleSubmit,
         formState: { errors },
     } = useForm()
-
-    const onSubmit = (data) => alert("User ID is "+data.username+ " Password is "+data.password)
+    
+    const onSubmit = handleSubmit(data => {
+        alert("User ID is " + data.username + " Password is " + data.password)
+    })
 
     const formStyle = {
         display: 'flex',
@@ -26,19 +29,28 @@ export default function Profile() {
 
     return (
         <div style={{ height: '200vh', width: '30%' }}>
-            <Typography variant="h3" style={{ margin: '20px 0px 20px 145px'}}>
+            <Typography variant="h3" style={{ margin: '20px 0px 20px 145px' }}>
                 Login
             </Typography>
             <form style={formStyle} onSubmit={handleSubmit(onSubmit)}>
-                <input {...register('username', { required: true })} style={inputStyle} placeholder="Username" />
-                {errors.username && <span style={{ color: 'red' }}>*This field is required</span>}
-                <input
+                <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    {...register('username', { required: true })}
+                    style={inputStyle}
+                    label="Username"
+                    error={errors.username}
+                    helperText={errors.username ? '*This field is required' : null}
+                />
+                <TextField
+                    id="outlined-basic"
+                    variant="outlined"
                     {...register('password', { required: true })}
                     style={inputStyle}
-                    placeholder="Password"
-                    type="password"
+                    label="Password"
+                    error={errors.password}
+                    helperText={errors.password ? '*This field is required' : null}
                 />
-                {errors.password && <span style={{ color: 'red' }}>*This field is required</span>}
                 <input type="submit" style={{ width: '80%', padding: '8px' }} />
             </form>
         </div>
