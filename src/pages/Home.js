@@ -21,17 +21,39 @@ import CountryTreeItem from "../components/CountryTreeItem";
 
 
 const Home = () => {
-    const [selectedRowData, setSelectedRowData] = useState(null);
+    const [selectedRowId, serSelectedRowId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [filteredTableData, setFilteredTableData] = useState(tableData);
+    const [filterCriteria, setFilterCriteria] = useState(null);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const filteredTableData = useMemo(() => {
+        if (!filterCriteria) {
+            return tableData;
+        }
+        let filteredData = tableData.filter((row) =>
+            row.country === filterCriteria || row.state === filterCriteria || row.city === filterCriteria
+        );
+        if (filteredData.length === 0) {
+            filteredData = tableData.filter((row) =>
+                row.state === filterCriteria || row.city === filterCriteria
+            );
+        }
+        return filteredData;
+    }, [filterCriteria]);
 
     const slicedTableData = useMemo(() => {
         const startIndex = page * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
         return filteredTableData.slice(startIndex, endIndex);
     }, [page, rowsPerPage, filteredTableData]);
+
+    const selectedRow = useMemo(() => {
+        let selectedData = tableData.filter((row) => 
+            row.id === selectedRowId
+        )
+        return selectedData;
+    }, [selectedRowId])
 
     const style = {
         position: 'absolute',
@@ -132,26 +154,14 @@ const Home = () => {
         },
     ];
 
-    const handleViewButtonClick = (rowData) => {
-        setSelectedRowData(rowData);
+    const handleViewButtonClick = (rowId) => {
+        serSelectedRowId(rowId);
         setIsModalOpen(true);
-        console.log(selectedRowData);
     };
 
     const handleNodeSelect = (node) => {
-        const filteredData = tableData.filter((row) => row.country === node);
-        const filteredData1 = tableData.filter((row) => row.state === node);
-        const filteredData2 = tableData.filter((row) => row.city === node);
-        setFilteredTableData(filteredData);
+        setFilterCriteria(node);
         setPage(0);
-        if (filteredData.length === 0) {
-            setFilteredTableData(filteredData1);
-            setPage(0);
-            if (filteredData1.length === 0) {
-                setFilteredTableData(filteredData2);
-                setPage(0);
-            }
-        }
     };
 
     const handlePageChange = (event, newPage) => {
@@ -228,7 +238,7 @@ const Home = () => {
                                 <TableCell >{row.city}</TableCell>
                                 <TableCell >{row.pinCode}</TableCell>
                                 <TableCell >
-                                    <CustomButton onClick={() => handleViewButtonClick(row)}>View</CustomButton>
+                                    <CustomButton onClick={() => handleViewButtonClick(row.id)}>View</CustomButton>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -253,25 +263,25 @@ const Home = () => {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Customer Details
                     </Typography>
-                    {selectedRowData && (
+                    {selectedRow.length > 0 && (
                         <Box>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                Name     : {selectedRowData.name}
+                                Name     : {selectedRow[0].name}
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                Address  : {selectedRowData.address}
+                                Address  : {selectedRow[0].address}
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                Country  : {selectedRowData.country}
+                                Country  : {selectedRow[0].country}
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                State    : {selectedRowData.state}
+                                State    : {selectedRow[0].state}
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                City     : {selectedRowData.city}
+                                City     : {selectedRow[0].city}
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                Pin Code : {selectedRowData.pinCode}
+                                Pin Code : {selectedRow[0].pinCode}
                             </Typography>
                         </Box>
                     )}

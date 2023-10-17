@@ -67,7 +67,7 @@ export default function VerticalTabs() {
       <TabPanel value={value} index={0} style={{flex: 3}}>
         <Home />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={1} style={{flex: 3}}>
         <Profile />
       </TabPanel>
       <TabPanel value={value} index={2}>
