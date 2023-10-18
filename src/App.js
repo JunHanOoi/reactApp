@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Home from './pages/Home';
 import Profile from './pages/Profile'
 import Setting from './pages/Setting'
+import classes from './App.module.css'
 import { Routes, Route, Link, BrowserRouter } from 'react-router-dom';
 
 function TabPanel(props) {
@@ -40,13 +41,13 @@ export default function VerticalTabs() {
 
   return (
     <BrowserRouter>
-      <Box sx={{ bgcolor: 'background.paper', display: 'flex', height: 224 }}>
-        <Tabs orientation="vertical" variant="scrollable" sx={{ borderRight: 1, borderColor: 'divider' }}>
+      <Box className={classes.container}>
+        <Tabs orientation="vertical" variant="scrollable" className={classes.tabStyle}>
           <Tab label={<Link to="/">Home</Link>} />
           <Tab label={<Link to="/profile">Profile</Link>} />
           <Tab label={<Link to="/setting">Setting</Link>} />
         </Tabs>
-        <TabPanel value={0} index={0} style={{ flex: 3 }}>
+        <TabPanel value={0} index={0} className={classes.tabPanelStyle}>
           <Routes>
             <Route exact path="/" Component={Home} />
             <Route path="/profile" Component={Profile} />

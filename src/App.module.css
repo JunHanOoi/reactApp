@@ -1,0 +1,13 @@
+.container {
+    background-color: white;
+    display: flex;
+}
+
+.container .tabStyle {
+    border-right: 1px solid;
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+.container .tabPanelStyle {
+    flex: 3;
+}

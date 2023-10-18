@@ -4,7 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { tableData } from "./tableData";
-import "./Home.css";
+import classes from "./Home.module.css";
 import { Modal } from "@mui/material";
 import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
@@ -14,8 +14,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Button, buttonClasses } from '@mui/base/Button';
-import { styled } from '@mui/system';
+import { Button } from '@mui/base/Button';
 import CountryTreeItem from "../components/CountryTreeItem";
 
 
@@ -54,18 +53,6 @@ const Home = () => {
         )
         return selectedData;
     }, [selectedRowId])
-
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-    };
 
     const data = [
         {
@@ -176,26 +163,16 @@ const Home = () => {
     const closeModal = () => {
         setIsModalOpen(false);
     };
-
-    const homeStyle = {
-        display: 'flex', 
-    };
+    console.log(classes)
 
     return (
-        <div style={homeStyle}>
-            <div style={{ width: "30%" }}>
-                <Typography variant="h3" style={{ marginTop: '20px', marginLeft: '20px' }}>
+        <div className={classes.container}>
+            <div className={classes.containerTreeMenu}>
+                <Typography variant="h3" className={classes.header}>
                     Home
                 </Typography>
                 <Box
-                    sx={{
-                        minHeight: 300,
-                        flexGrow: 1,
-                        maxWidth: 300,
-                        marginLeft: 2,
-                        marginTop: 5,
-                        border: 1,
-                    }}
+                    className={classes.containerTreeView}
                 >
                     <TreeView
                         aria-label="rich object"
@@ -209,7 +186,7 @@ const Home = () => {
                 </Box>
             </div>
             <TableContainer >
-                <Table sx={{ marginTop: '115px', marginLeft: '20px' }} size="small" aria-label="simple table">
+                <Table className={classes.containerTable} size="small" aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell>ID</TableCell>
@@ -238,7 +215,7 @@ const Home = () => {
                                 <TableCell >{row.city}</TableCell>
                                 <TableCell >{row.pinCode}</TableCell>
                                 <TableCell >
-                                    <CustomButton onClick={() => handleViewButtonClick(row.id)}>View</CustomButton>
+                                    <Button className={classes.customButton} onClick={() => handleViewButtonClick(row.id)}>View</Button>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -259,28 +236,28 @@ const Home = () => {
                 aria-describedby="modal-modal-description"
 
             >
-                <Box sx={style}>
+                <Box className={classes.modalStyle}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Customer Details
                     </Typography>
                     {selectedRow.length > 0 && (
                         <Box>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Typography id="modal-modal-description" className={classes.modalDescription}>
                                 Name     : {selectedRow[0].name}
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Typography id="modal-modal-description" className={classes.modalDescription}>
                                 Address  : {selectedRow[0].address}
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Typography id="modal-modal-description" className={classes.modalDescription}>
                                 Country  : {selectedRow[0].country}
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Typography id="modal-modal-description" className={classes.modalDescription}>
                                 State    : {selectedRow[0].state}
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Typography id="modal-modal-description" className={classes.modalDescription}>
                                 City     : {selectedRow[0].city}
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Typography id="modal-modal-description" className={classes.modalDescription}>
                                 Pin Code : {selectedRow[0].pinCode}
                             </Typography>
                         </Box>
@@ -290,43 +267,5 @@ const Home = () => {
         </div>
     );
 }
-
-const blue = {
-    500: '#007FFF',
-    600: '#0072E5',
-    700: '#0059B2',
-};
-
-const CustomButton = styled(Button)`
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    background-color: ${blue[500]};
-    color: white;
-    border-radius: 8px;
-    font-weight: 600;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: all 150ms ease;
-    border: none;
-  
-    &:hover:not(:disabled) {
-      background-color: ${blue[600]};
-    }
-  
-    &:active:not(:disabled) {
-      background-color: ${blue[700]};
-    }
-  
-    &.${buttonClasses.focusVisible} {
-      box-shadow: 0 4px 20px 0 rgb(61 71 82 / 0.1), 0 0 0 5px rgb(0 127 255 / 0.5);
-      outline: none;
-    }
-  
-    &.${buttonClasses.disabled} {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  `;
 
 export default Home;

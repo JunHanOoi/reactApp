@@ -1,57 +1,65 @@
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import { Button } from '@mui/base/Button';
+import classes from './Profile.module.css'
 
 
 export default function Profile() {
     const {
-        register,
         handleSubmit,
-        formState: { errors },
+        control,
     } = useForm()
-    
+
     const onSubmit = handleSubmit(data => {
         alert("User ID is " + data.username + " Password is " + data.password)
     })
 
-    const formStyle = {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    };
-
-    const inputStyle = {
-        width: '100%',
-        marginBottom: '10px',
-        padding: '8px',
-    };
-
     return (
-        <div style={{ height: '200vh', width: '30%' }}>
-            <Typography variant="h3" style={{ margin: '20px 0px 20px 145px' }}>
+        <div className={classes.divStyle}>
+            <Typography variant="h3" className={classes.headerStyle}>
                 Login
             </Typography>
-            <form style={formStyle} onSubmit={handleSubmit(onSubmit)}>
-                <TextField
-                    id="outlined-basic"
-                    variant="outlined"
-                    {...register('username', { required: true })}
-                    style={inputStyle}
-                    label="Username"
-                    error={errors.username}
-                    helperText={errors.username ? '*This field is required' : null}
+            <form className={classes.formStyle} onSubmit={onSubmit}>
+                <Controller
+                    name="username"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({ field, fieldState }) => (
+                        <TextField
+                            id="outlined-basic"
+                            variant="outlined"
+                            {...field}
+                            className={classes.inputStyle}
+                            label="Username"
+                            error={!!fieldState.error}
+                            helperText={fieldState.error ? '*This field is required' : null}
+                        />
+                    )}
                 />
-                <TextField
-                    id="outlined-basic"
-                    variant="outlined"
-                    {...register('password', { required: true })}
-                    style={inputStyle}
-                    label="Password"
-                    error={errors.password}
-                    helperText={errors.password ? '*This field is required' : null}
+                <Controller
+                    name="password"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({ field, fieldState }) => (
+                        <TextField
+                            id="outlined-basic"
+                            variant="outlined"
+                            type='password'
+                            {...field}
+                            className={classes.inputStyle}
+                            label="Password"
+                            error={!!fieldState.error}
+                            helperText={fieldState.error ? '*This field is required' : null}
+                        />
+                    )}
                 />
-                <input type="submit" style={{ width: '80%', padding: '8px' }} />
+                <Button type="submit" className={classes.buttonStyle}>
+                    Submit
+                </Button>
             </form>
         </div>
     )
